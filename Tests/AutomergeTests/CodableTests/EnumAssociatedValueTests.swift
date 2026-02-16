@@ -106,8 +106,6 @@ final class EnumAssociatedValueTests: XCTestCase {
         let sample = Wrapper(value: .simple(SimpleStruct(value: "test")))
 
         try encoder.encode(sample)
-
-        // This should fail with .SchemaMissing error
         let decoded = try decoder.decode(Wrapper.self)
 
         XCTAssertEqual(sample, decoded)
@@ -125,8 +123,6 @@ final class EnumAssociatedValueTests: XCTestCase {
         )))
 
         try encoder.encode(sample)
-
-        // This should fail with .SchemaMissing error
         let decoded = try decoder.decode(Wrapper.self)
 
         XCTAssertEqual(sample, decoded)
@@ -143,8 +139,6 @@ final class EnumAssociatedValueTests: XCTestCase {
         )))
 
         try encoder.encode(sample)
-
-        // This should fail with .SchemaMissing error
         let decoded = try decoder.decode(Wrapper.self)
 
         XCTAssertEqual(sample, decoded)
@@ -266,8 +260,6 @@ final class EnumAssociatedValueTests: XCTestCase {
         let sample = Wrapper(value: .mixed("test", SimpleStruct(value: "inner")))
 
         try encoder.encode(sample)
-
-        // This should fail - struct component won't be decoded properly
         let decoded = try decoder.decode(Wrapper.self)
 
         XCTAssertEqual(sample, decoded)
@@ -284,8 +276,6 @@ final class EnumAssociatedValueTests: XCTestCase {
         ))
 
         try encoder.encode(sample)
-
-        // This should fail - both structs won't be decoded properly
         let decoded = try decoder.decode(Wrapper.self)
 
         XCTAssertEqual(sample, decoded)
@@ -308,8 +298,6 @@ final class EnumAssociatedValueTests: XCTestCase {
         )))
 
         try encoder.encode(sample)
-
-        // This should fail with nested schema issues
         let decoded = try decoder.decode(Wrapper.self)
 
         XCTAssertEqual(sample, decoded)
@@ -329,8 +317,6 @@ final class EnumAssociatedValueTests: XCTestCase {
         ])
 
         try encoder.encode(sample)
-
-        // This should fail for each struct-associated enum in the array
         let decoded = try decoder.decode(Wrapper.self)
 
         XCTAssertEqual(sample, decoded)
