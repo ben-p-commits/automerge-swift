@@ -182,7 +182,7 @@ struct AutomergeUnkeyedEncodingContainer: UnkeyedEncodingContainer {
             }
             impl.highestUnkeyedIndexWritten = UInt64(count)
         default:
-            let newPath = impl.codingPath + [AnyCodingKey(UInt64(count))]
+            let newPath = codingPath + [AnyCodingKey(UInt64(count))]
             let newEncoder = AutomergeEncoderImpl(
                 userInfo: impl.userInfo,
                 codingPath: newPath,
@@ -220,7 +220,7 @@ struct AutomergeUnkeyedEncodingContainer: UnkeyedEncodingContainer {
     mutating func nestedContainer<NestedKey>(keyedBy _: NestedKey.Type) ->
         KeyedEncodingContainer<NestedKey> where NestedKey: CodingKey
     {
-        let newPath = impl.codingPath + [AnyCodingKey(UInt64(count))]
+        let newPath = codingPath + [AnyCodingKey(UInt64(count))]
         let nestedContainer = AutomergeKeyedEncodingContainer<NestedKey>(
             impl: impl,
             codingPath: newPath,
@@ -230,7 +230,7 @@ struct AutomergeUnkeyedEncodingContainer: UnkeyedEncodingContainer {
     }
 
     mutating func nestedUnkeyedContainer() -> UnkeyedEncodingContainer {
-        let newPath = impl.codingPath + [AnyCodingKey(UInt64(count))]
+        let newPath = codingPath + [AnyCodingKey(UInt64(count))]
         let nestedContainer = AutomergeUnkeyedEncodingContainer(
             impl: impl,
             codingPath: newPath,
