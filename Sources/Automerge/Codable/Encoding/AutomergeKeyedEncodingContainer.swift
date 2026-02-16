@@ -278,7 +278,7 @@ struct AutomergeKeyedEncodingContainer<K: CodingKey>: KeyedEncodingContainerProt
         guard let objectId = objectId else {
             throw reportBestError()
         }
-        let newPath = impl.codingPath + [key]
+        let newPath = codingPath + [key]
         // this is where we need to figure out what the encodable type is in order to create
         // the correct Automerge objectType underneath the covers.
         // For example - for encoding another struct, class, or dict - we'd want to make it .map,
@@ -397,7 +397,7 @@ struct AutomergeKeyedEncodingContainer<K: CodingKey>: KeyedEncodingContainerProt
     mutating func nestedContainer<NestedKey>(keyedBy _: NestedKey.Type, forKey key: Self.Key) ->
         KeyedEncodingContainer<NestedKey> where NestedKey: CodingKey
     {
-        let newPath = impl.codingPath + [key]
+        let newPath = codingPath + [key]
         let nestedContainer = AutomergeKeyedEncodingContainer<NestedKey>(
             impl: impl,
             codingPath: newPath,
@@ -407,7 +407,7 @@ struct AutomergeKeyedEncodingContainer<K: CodingKey>: KeyedEncodingContainerProt
     }
 
     mutating func nestedUnkeyedContainer(forKey key: Self.Key) -> UnkeyedEncodingContainer {
-        let newPath = impl.codingPath + [key]
+        let newPath = codingPath + [key]
         let nestedContainer = AutomergeUnkeyedEncodingContainer(
             impl: impl,
             codingPath: newPath,
