@@ -90,7 +90,7 @@ final class EnumAssociatedValueTests: XCTestCase {
         XCTAssertEqual(sample, decoded)
     }
 
-    // MARK: - Bug Test: Enum with Struct Associated Value (Expected to Fail)
+    // MARK: - Bug Test: Enum with Struct Associated Value
 
     enum StructEnum: Codable, Equatable {
         case simple(SimpleStruct)
