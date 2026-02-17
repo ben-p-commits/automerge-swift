@@ -1,6 +1,70 @@
 import Automerge
 import XCTest
 
+// MARK: - Test Data Structures
+
+// These types are defined at file scope rather than as nested types inside the XCTestCase subclass.
+// Enums with associated values declared at class scope produce complex mangled type names that the
+// Swift-WASM runtime cannot resolve during test registration, causing a crash before any tests run.
+// File-scope private types avoid this issue while keeping the types local to this file.
+
+private struct SimpleStruct: Codable, Equatable {
+    let value: String
+}
+
+private struct ComplexStruct: Codable, Equatable {
+    let name: String
+    let count: Int
+    let flag: Bool
+}
+
+private struct NestedStruct: Codable, Equatable {
+    let inner: SimpleStruct
+    let number: Int
+}
+
+private enum PrimitiveEnum: Codable, Equatable {
+    case string(String)
+    case integer(Int)
+    case boolean(Bool)
+    case double(Double)
+}
+
+private enum StructEnum: Codable, Equatable {
+    case simple(SimpleStruct)
+    case complex(ComplexStruct)
+    case nested(NestedStruct)
+}
+
+private enum OptionalStructEnum: Codable, Equatable {
+    case optionalSimple(SimpleStruct?)
+    case optionalComplex(ComplexStruct?)
+}
+
+private enum OptionalPrimitiveEnum: Codable, Equatable {
+    case optionalString(String?)
+    case optionalInt(Int?)
+}
+
+private enum MultipleAssociatedEnum: Codable, Equatable {
+    case primitives(String, Int)
+    case mixed(String, SimpleStruct)
+    case structs(SimpleStruct, ComplexStruct)
+}
+
+private enum DeeplyNestedEnum: Codable, Equatable {
+    case nested(NestedStruct)
+}
+
+private enum SpecialTypesEnum: Codable, Equatable {
+    case url(URL)
+    case uuid(UUID)
+    case date(Date)
+    case data(Data)
+}
+
+// MARK: - Tests
+
 final class EnumAssociatedValueTests: XCTestCase {
     var doc: Document!
     var encoder: AutomergeEncoder!
@@ -12,31 +76,7 @@ final class EnumAssociatedValueTests: XCTestCase {
         decoder = AutomergeDecoder(doc: doc)
     }
 
-    // MARK: - Test Data Structures
-
-    struct SimpleStruct: Codable, Equatable {
-        let value: String
-    }
-
-    struct ComplexStruct: Codable, Equatable {
-        let name: String
-        let count: Int
-        let flag: Bool
-    }
-
-    struct NestedStruct: Codable, Equatable {
-        let inner: SimpleStruct
-        let number: Int
-    }
-
     // MARK: - Baseline: Enum with Primitive Associated Values (Should Work)
-
-    enum PrimitiveEnum: Codable, Equatable {
-        case string(String)
-        case integer(Int)
-        case boolean(Bool)
-        case double(Double)
-    }
 
     func testEnumWithStringAssociatedValue() throws {
         struct Wrapper: Codable, Equatable {
@@ -92,12 +132,6 @@ final class EnumAssociatedValueTests: XCTestCase {
 
     // MARK: - Bug Test: Enum with Struct Associated Value
 
-    enum StructEnum: Codable, Equatable {
-        case simple(SimpleStruct)
-        case complex(ComplexStruct)
-        case nested(NestedStruct)
-    }
-
     func testEnumWithSimpleStructAssociatedValue() throws {
         struct Wrapper: Codable, Equatable {
             let value: StructEnum
@@ -145,11 +179,6 @@ final class EnumAssociatedValueTests: XCTestCase {
     }
 
     // MARK: - Bug Test: Enum with Optional Struct (Data Loss)
-
-    enum OptionalStructEnum: Codable, Equatable {
-        case optionalSimple(SimpleStruct?)
-        case optionalComplex(ComplexStruct?)
-    }
 
     func testEnumWithOptionalStructAssociatedValue_nil() throws {
         struct Wrapper: Codable, Equatable {
@@ -200,11 +229,6 @@ final class EnumAssociatedValueTests: XCTestCase {
 
     // MARK: - Optional Primitive Tests (Should Work)
 
-    enum OptionalPrimitiveEnum: Codable, Equatable {
-        case optionalString(String?)
-        case optionalInt(Int?)
-    }
-
     func testEnumWithOptionalPrimitiveAssociatedValue_nil() throws {
         struct Wrapper: Codable, Equatable {
             let value: OptionalPrimitiveEnum
@@ -232,12 +256,6 @@ final class EnumAssociatedValueTests: XCTestCase {
     }
 
     // MARK: - Multiple Associated Values (Mixed Types)
-
-    enum MultipleAssociatedEnum: Codable, Equatable {
-        case primitives(String, Int)
-        case mixed(String, SimpleStruct)
-        case structs(SimpleStruct, ComplexStruct)
-    }
 
     func testEnumWithMultiplePrimitiveAssociatedValues() throws {
         struct Wrapper: Codable, Equatable {
@@ -283,10 +301,6 @@ final class EnumAssociatedValueTests: XCTestCase {
 
     // MARK: - Deeply Nested Cases
 
-    enum DeeplyNestedEnum: Codable, Equatable {
-        case nested(NestedStruct)
-    }
-
     func testEnumWithDeeplyNestedStruct() throws {
         struct Wrapper: Codable, Equatable {
             let value: DeeplyNestedEnum
@@ -323,13 +337,6 @@ final class EnumAssociatedValueTests: XCTestCase {
     }
 
     // MARK: - Edge Case: Enum with Special Types
-
-    enum SpecialTypesEnum: Codable, Equatable {
-        case url(URL)
-        case uuid(UUID)
-        case date(Date)
-        case data(Data)
-    }
 
     func testEnumWithURLAssociatedValue() throws {
         struct Wrapper: Codable, Equatable {
