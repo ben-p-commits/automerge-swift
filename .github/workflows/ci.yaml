@@ -6,7 +6,6 @@ on:
     branches: [main]
 
 jobs:
-
   automerge-dependencies:
     runs-on: macos-14
     env:
@@ -30,7 +29,7 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: 1.81.0
+          toolchain: 1.89.0
           default: true
       - name: Select Xcode 15.4
         run: sudo xcode-select -s /Applications/Xcode_15.4.app
@@ -124,7 +123,7 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: 1.81.0
+          toolchain: 1.89.0
           default: true
           components: rustfmt
       - name: Clippy
@@ -137,7 +136,7 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: 1.81.0
+          toolchain: 1.89.0
           default: true
           components: clippy
       - name: Clippy
